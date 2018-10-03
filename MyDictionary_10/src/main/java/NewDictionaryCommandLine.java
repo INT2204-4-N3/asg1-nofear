@@ -1,8 +1,8 @@
 public class NewDictionaryCommandLine extends DictionaryCommandline{
 
     public void dictionaryBasic(){
-//        insertFromCommandline();
-        insertFromFile();
+        insertFromCommandline();
+//        insertFromFile();
         showAllWords();
     }
 }
