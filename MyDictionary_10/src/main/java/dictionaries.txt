@@ -1,4 +1,11 @@
 handsome    dep trai
-sweet   ngot
-delicious   ngon
+sweet    ngot
+delicious    ngon
 good    tot
+house    nha
+horse    con ngua
+car    xe oto
+rich    giau
+poor    ngheo
+beautiful    dep
+ugly    xau
