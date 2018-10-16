@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="403.0" prefWidth="481.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dictionary.editController">
+    <children>
+        <TextField fx:id="txtWord" disable="true" layoutX="57.0" layoutY="37.0" prefHeight="31.0" prefWidth="361.0" />
+        <TextArea fx:id="txtExplain" layoutX="57.0" layoutY="86.0" prefHeight="206.0" prefWidth="361.0" promptText="Explain" />
+        <Button fx:id="btnSub" layoutX="377.0" layoutY="323.0" mnemonicParsing="false" onAction="#SubAction" text="OK" />
+        <Button fx:id="btnCancel" layoutX="300.0" layoutY="323.0" mnemonicParsing="false" onAction="#CancelAction" text="Cancel" />
+    </children>
+</AnchorPane>
