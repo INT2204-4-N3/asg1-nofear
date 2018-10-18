@@ -46,6 +46,7 @@ public class IndexController  {
     public void initialize() {
         DictionaryManagement.keys.clear();
         DictionaryManagement.data.clear();
+
         dict.getItems().add("English-Vietnamese");
         dict.getItems().add("Viet-Anh");
 
@@ -53,11 +54,14 @@ public class IndexController  {
 
     }
     public void updateDict(){
-        String choice = dict.getValue().toString();
+        String choice = dict.getValue();
+
         if(choice.equals("Viet-Anh")){
             try {
+
                 FXMLLoader.load(getClass().getResource("index.fxml"));
-                DictionaryManagement.readFile(Config.FILE_DICTIONARY_VE);
+                DictionaryManagement.path = Config.FILE_DICTIONARY_VE;
+                DictionaryManagement.readFile(DictionaryManagement.path);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -65,7 +69,8 @@ public class IndexController  {
         else{
             try {
                 FXMLLoader.load(getClass().getResource("index.fxml"));
-                DictionaryManagement.readFile(Config.FILE_DICTIONARY_EV);
+                DictionaryManagement.path = Config.FILE_DICTIONARY_EV;
+                DictionaryManagement.readFile(DictionaryManagement.path);
             } catch (IOException e) {
                 e.printStackTrace();
             }

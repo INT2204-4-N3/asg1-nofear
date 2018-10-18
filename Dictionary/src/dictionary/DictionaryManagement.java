@@ -15,7 +15,7 @@ import java.util.Map;
 class DictionaryManagement {
     static ArrayList<String> keys = new ArrayList<>();
     static Map<String, String> data = new HashMap<>();
-
+    static String path = Config.FILE_DICTIONARY_EV;
 
     public static void readFile(String path) {
         BufferedReader br = null;
@@ -47,10 +47,10 @@ class DictionaryManagement {
         return true;
     }
 
-    private static void Update() {
+    private static void Update(String path) {
         BufferedWriter bw = null;
         try {
-            bw = new BufferedWriter(new FileWriter(Config.FILE_DICTIONARY));
+            bw = new BufferedWriter(new FileWriter(path));
             for (String key : keys) {
                 bw.write(key + DictionaryManagement.data.get(key));
                 bw.newLine();
@@ -69,19 +69,19 @@ class DictionaryManagement {
         explain = generateExplain(explain);
         keys.add(word);
         data.put(word, explain);
-        Update();
+        Update(path);
     }
 
     public static void removeWord(String word) {
         keys.remove(word);
         data.remove(word);
-        Update();
+        Update(path);
     }
 
     public static void editWord(String word, String oldExplain, String newExplain) {
         newExplain = generateExplain(newExplain);
         data.replace(word, oldExplain, newExplain);
-        Update();
+        Update(path);
     }
 
     private static String generateExplain(String explain) {
