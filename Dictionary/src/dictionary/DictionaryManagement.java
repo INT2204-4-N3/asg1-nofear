@@ -17,10 +17,10 @@ class DictionaryManagement {
     static Map<String, String> data = new HashMap<>();
 
 
-    public static void readFile() {
+    public static void readFile(String path) {
         BufferedReader br = null;
         try {
-            br = new BufferedReader(new FileReader(Config.FILE_DICTIONARY));
+            br = new BufferedReader(new FileReader(path));
             String line;
             String word, explain;
 

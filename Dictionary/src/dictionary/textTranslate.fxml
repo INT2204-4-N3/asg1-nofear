@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.web.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="618.0" prefWidth="630.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dictionary.textTranslateController">
+   <children>
+      <TextArea layoutX="14.0" layoutY="125.0" prefHeight="352.0" prefWidth="232.0" />
+      <Button fx:id="btnConvert" layoutX="279.0" layoutY="446.0" mnemonicParsing="false" onAction="#convertAction" text="Convert" />
+      <TextArea layoutX="376.0" layoutY="125.0" prefHeight="352.0" prefWidth="232.0" />
+   </children>
+</AnchorPane>

@@ -16,12 +16,12 @@ public class Translator {
     }
 
     public static String translate(String langFrom, String langTo, String text) throws IOException {
-        // INSERT YOU URL HERE
+
         String urlStr = "https://script.google.com/macros/s/AKfycbzVtHd1IkqafyVf7wJu5JvaYilif_9K--t8Z9iDumXzlZg2mvAB/exec" +
                 "?q=" + URLEncoder.encode(text, "UTF-8") +
                 "&target=" + langTo +
                 "&source=" + langFrom;
-        System.out.println(urlStr);
+        //System.out.println(urlStr);
         URL url = new URL(urlStr);
         StringBuilder response = new StringBuilder();
         HttpURLConnection con = (HttpURLConnection) url.openConnection();

@@ -28,7 +28,7 @@ public class editController {
         if (txtExplain.getText().isEmpty()) {
             CancelAction();
         } else {
-            Optional<ButtonType> result = Message.Confirmation("Are you edit this word ?");
+            Optional<ButtonType> result = Message.Confirmation("Do you edit this word ?");
             if (result.get() == ButtonType.OK) {
                 String oldExplain = DictionaryManagement.lookUp(txtWord.getText());
                 DictionaryManagement.editWord(txtWord.getText(), oldExplain, txtExplain.getText());
