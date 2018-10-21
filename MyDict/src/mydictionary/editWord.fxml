@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.web.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="440.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mydictionary.EditWordController">
+   <children>
+      <Label alignment="CENTER" layoutX="200.0" layoutY="14.0" text="Chức năng  sửa từ" textFill="#0973eb">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Label>
+      <Label layoutX="14.0" layoutY="50.0" prefHeight="21.0" prefWidth="30.0" text="Từ" textFill="#0973eb">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <TextField fx:id="wordTargetText" editable="false" focusTraversable="false" layoutX="14.0" layoutY="71.0" prefHeight="31.0" prefWidth="243.0">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </TextField>
+      <Label layoutX="15.0" layoutY="122.0" text="Giải nghĩa" textFill="#0973eb">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <WebView fx:id="wordExplanationText" layoutX="15.0" layoutY="148.0" prefHeight="236.0" prefWidth="243.0" />
+      <Label layoutX="267.0" layoutY="190.0" text="Sửa thành" textFill="#0973eb">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <TextField fx:id="nextWordTargetText" layoutX="342.0" layoutY="74.0" prefHeight="31.0" prefWidth="243.0" promptText="Nhập từ">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </TextField>
+      <TextArea fx:id="nextWordExplanationText" layoutX="342.0" layoutY="148.0" prefHeight="236.0" prefWidth="243.0" promptText="Nhập giải nghĩa" wrapText="true">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </TextArea>
+      <Button layoutX="265.0" layoutY="397.0" mnemonicParsing="false" onAction="#acceptButtonOnAction" text="Xác nhận">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
