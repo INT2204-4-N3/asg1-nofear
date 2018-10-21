@@ -9,8 +9,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -45,27 +43,28 @@ public class IndexController {
         dict.getItems().add("English-Vietnamese");
         dict.getItems().add("Việt-Anh");
         dict.setValue("Select dictionary");
-
+        updateDict();
 
     }
 
     public void updateDict() {
         String choice = dict.getValue();
-
-        if (choice.equals("Viet-Anh")) {
+        String path;
+        if (choice.equals("Việt-Anh")) {
+            path = Config.FILE_DICTIONARY_VE;
             try {
 
+                //path = Config.FILE_DICTIONARY_VE;
                 FXMLLoader.load(getClass().getResource("index.fxml"));
-                DictionaryManagement.path = Config.FILE_DICTIONARY_VE;
-                DictionaryManagement.readFile(DictionaryManagement.path);
+                DictionaryManagement.readFile(path);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else {
+        } else if (choice.equals("English-Vietnamese")) {
+            path = Config.FILE_DICTIONARY_EV;
             try {
                 FXMLLoader.load(getClass().getResource("index.fxml"));
-                DictionaryManagement.path = Config.FILE_DICTIONARY_EV;
-                DictionaryManagement.readFile(DictionaryManagement.path);
+                DictionaryManagement.readFile(path);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -99,6 +98,8 @@ public class IndexController {
         btnEdit.setVisible(true);
         btnDel.setVisible(true);
         btnAudio.setVisible(true);
+//        Image image = new Image(getClass().getResourceAsStream("\\icon\\speaker.png"));
+//        btnAudio.setGraphic(new ImageView(image));
 
     }
 
@@ -159,10 +160,11 @@ public class IndexController {
     public void Showhint(KeyEvent event) {
         listHint.getItems().setAll(DictionaryManagement.searcher(txtInput.getText()));
     }
+
     @FXML
     private Button btnVoice;
 
-    public void voice(){
+    public void voice() {
         Trying_Different_Languages tdl = new Trying_Different_Languages(txtInput.getText());
 
     }

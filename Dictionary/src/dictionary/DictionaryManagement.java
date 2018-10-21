@@ -3,10 +3,7 @@ package dictionary;
 //import com.sun.speech.freetts.Voice;
 //import com.sun.speech.freetts.VoiceManager;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +16,10 @@ class DictionaryManagement {
     public static void readFile(String path) {
         BufferedReader br = null;
         try {
-            br = new BufferedReader(new FileReader(path));
+            FileInputStream fileInPutStream = new FileInputStream(path);
+            Reader reader = new java.io.InputStreamReader(fileInPutStream, "utf8");
+            br = new BufferedReader(reader);
+//            br = new BufferedReader(new FileReader(path),"UTF8");
             String line;
             String word, explain;
 
@@ -70,6 +70,7 @@ class DictionaryManagement {
         data.put(word, explain);
         Update(path);
     }
+    //may/
 
     public static void removeWord(String word) {
         keys.remove(word);
@@ -98,7 +99,3 @@ class DictionaryManagement {
     }
 
 }
-//
-
-                //dc roi day
-//?? xong à

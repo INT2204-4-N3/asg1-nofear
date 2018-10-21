@@ -1,0 +1,20 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Dictionary:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Dictionary_jar</output-path>
+    <root id="archive" name="Dictionary.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/Dictionary/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="Dictionary" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/resource/java-google-speech-api-V2.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/resource/marytts-builder-5.2-jar-with-dependencies.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/resource/marytts-lang-en-5.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/resource/voice-cmu-rms-hsmm-5.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/resource/voice-dfki-poppy-hsmm-5.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/resource/voice-cmu-slt-hsmm-5.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/jlayer-1.0.1.jar/jlayer-1.0.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/java-google-speech-api-V2.1.jar" path-in-jar="/" />
+      <element id="library" level="project" name="goxr3plus" />
+    </root>
+  </artifact>
+</component>
