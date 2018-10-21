@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.web.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.web.WebView?>
+
+<AnchorPane prefHeight="500.0" prefWidth="732.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mydictionary.DictController">
+   <children>
+      <TextField fx:id="searchBox" alignment="CENTER" focusTraversable="false" layoutX="19.0" layoutY="87.0" onKeyReleased="#textFieldKeyReleasedAction" prefHeight="31.0" prefWidth="181.0" promptText="Nhập từ cần tra">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </TextField>
+      <Label alignment="CENTER" layoutX="233.0" layoutY="5.0" prefHeight="36.0" prefWidth="299.0" text="Từ điển Anh - Việt" textAlignment="CENTER" textFill="#0973eb" textOverrun="WORD_ELLIPSIS">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Label>
+      <ComboBox fx:id="modeComboBox" focusTraversable="false" layoutX="40.0" layoutY="44.0" onMouseClicked="#comboBoxMouseClickedAction" prefHeight="25.0" prefWidth="140.0" promptText="          Anh - Việt" />
+      <ListView fx:id="wordTargetList" focusTraversable="false" layoutX="19.0" layoutY="128.0" onMouseClicked="#listMouseClickedAction" prefHeight="355.0" prefWidth="182.0" />
+      <WebView fx:id="wordExplanation" focusTraversable="false" layoutX="225.0" layoutY="88.0" prefHeight="393.0" prefWidth="490.0" />
+      <Button fx:id="speechButton" focusTraversable="false" layoutX="230.0" layoutY="57.0" mnemonicParsing="false" onMouseClicked="#speechButtonMouseClickedAction" text="Phát âm" />
+      <Button focusTraversable="false" layoutX="330.0" layoutY="57.0" mnemonicParsing="false" onMouseClicked="#searchTextButtonMouseClickedAction" text="Dịch văn bản" />
+      <Button focusTraversable="false" layoutX="461.0" layoutY="57.0" mnemonicParsing="false" onMouseClicked="#addWordButtonMouseClickedAction" text="Thêm từ" />
+      <Button focusTraversable="false" layoutX="569.0" layoutY="57.0" mnemonicParsing="false" onMouseClicked="#editWordButtonMouseClickedAction" text="Sửa từ" />
+      <Button focusTraversable="false" layoutX="660.0" layoutY="57.0" mnemonicParsing="false" onMouseClicked="#deleteWordButtonMouseClickedAction" text="Xóa từ" />
+   </children>
+</AnchorPane>

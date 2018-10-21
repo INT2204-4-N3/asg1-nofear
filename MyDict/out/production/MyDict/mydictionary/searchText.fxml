@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mydictionary.SearchTextController">
+   <children>
+      <Label alignment="CENTER" layoutX="167.0" text="Chức năng dịch văn bản" textAlignment="CENTER" textFill="#0973eb">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Label>
+      <Label layoutX="14.0" layoutY="53.0" text="Nhập văn bản" textFill="#0973eb">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <TextArea fx:id="typingTextArea" layoutX="14.0" layoutY="82.0" prefHeight="120.0" prefWidth="570.0" wrapText="true">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </TextArea>
+      <TextArea fx:id="translatedTextArea" editable="false" layoutX="14.0" layoutY="266.0" prefHeight="120.0" prefWidth="570.0" wrapText="true">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </TextArea>
+      <Button fx:id="translateButton" layoutX="259.0" layoutY="222.0" mnemonicParsing="false" onMouseClicked="#translateButtonMouseClickedAction" prefHeight="25.0" prefWidth="80.0" text="Dịch">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Button>
+      <ComboBox fx:id="choseLanguageBox" layoutX="127.0" layoutY="51.0" onAction="#choseLanguageBoxMouseClickedAction" onMouseClicked="#choseLanguageBoxMouseClickedAction" prefWidth="100.0" promptText="Tiếng Việt" />
+   </children>
+</AnchorPane>
