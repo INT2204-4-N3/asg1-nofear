@@ -1,21 +1,20 @@
 package dictionary;
 
-import app.Config;
+//import com.sun.speech.freetts.Voice;
+//import com.sun.speech.freetts.VoiceManager;
 
-import javax.rmi.CORBA.Util;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Map;
 
 class DictionaryManagement {
     static ArrayList<String> keys = new ArrayList<>();
     static Map<String, String> data = new HashMap<>();
-    static String path = Config.FILE_DICTIONARY_EV;
+    static String path = null;
 
     public static void readFile(String path) {
         BufferedReader br = null;
@@ -84,7 +83,22 @@ class DictionaryManagement {
         Update(path);
     }
 
+    public static ArrayList<String> searcher(String word) {
+        ArrayList<String> hint = new ArrayList<>();
+        for (String w : keys) {
+            if (word.startsWith(w)) {
+                hint.add(w);
+            }
+        }
+        return hint;
+    }
+
     private static String generateExplain(String explain) {
         return "<html><ul><li><font color='#cc0000'><b>" + explain + "</b></font><ul></html>";
     }
+
 }
+//
+
+                //dc roi day
+//?? xong à

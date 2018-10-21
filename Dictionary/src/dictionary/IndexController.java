@@ -1,30 +1,26 @@
 package dictionary;
 
+import Speech.Trying_Different_Languages;
 import app.Config;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.StackPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
-import java.awt.event.ActionEvent;
 import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
 
-public class IndexController  {
+public class IndexController {
     private ObservableList<String> languages = FXCollections.observableArrayList("Viet-Anh", "Anh - Viet");
     @FXML
     private ChoiceBox<String> choiceBox;
@@ -41,22 +37,22 @@ public class IndexController  {
     private ComboBox<String> dict = new ComboBox<String>();
 
 
-
     @FXML
     public void initialize() {
         DictionaryManagement.keys.clear();
         DictionaryManagement.data.clear();
 
         dict.getItems().add("English-Vietnamese");
-        dict.getItems().add("Viet-Anh");
+        dict.getItems().add("Việt-Anh");
+        dict.setValue("Select dictionary");
 
-        dict.setValue("Select Language");
 
     }
-    public void updateDict(){
+
+    public void updateDict() {
         String choice = dict.getValue();
 
-        if(choice.equals("Viet-Anh")){
+        if (choice.equals("Viet-Anh")) {
             try {
 
                 FXMLLoader.load(getClass().getResource("index.fxml"));
@@ -65,8 +61,7 @@ public class IndexController  {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        else{
+        } else {
             try {
                 FXMLLoader.load(getClass().getResource("index.fxml"));
                 DictionaryManagement.path = Config.FILE_DICTIONARY_EV;
@@ -101,9 +96,10 @@ public class IndexController  {
     }
 
     public void showButtonAction() {
-        btnAudio.setVisible(true);
         btnEdit.setVisible(true);
         btnDel.setVisible(true);
+        btnAudio.setVisible(true);
+
     }
 
     public void addAction() {
@@ -117,24 +113,6 @@ public class IndexController  {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //btnAdd.getScene().getWindow().hide();
-
-//        Stage primaryStage = new Stage();
-//        primaryStage.setTitle("Add new word");
-//
-//
-//        Button buttonmain = new Button("Click to go to pop up window");
-//        buttonmain.setOnAction(e -> popupAddController.display());
-//
-//        StackPane layout = new StackPane();
-//
-//        layout.getChildren().add(buttonmain);
-//
-//
-//        Scene scene1 = new Scene(layout, 300, 250);
-//        primaryStage.setScene(scene1);
-//
-//        primaryStage.show();
     }
 
 
@@ -175,5 +153,18 @@ public class IndexController  {
 
     }
 
+    @FXML
+    private ListView<String> listHint;
+
+    public void Showhint(KeyEvent event) {
+        listHint.getItems().setAll(DictionaryManagement.searcher(txtInput.getText()));
+    }
+    @FXML
+    private Button btnVoice;
+
+    public void voice(){
+        Trying_Different_Languages tdl = new Trying_Different_Languages(txtInput.getText());
+
+    }
 
 }
