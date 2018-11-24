@@ -7,10 +7,11 @@ import javafx.scene.image.WritableImage;
 
 public class SpritesImage {
 
-    private final Image spriteSheet = new Image(SpritesImage.class.getClassLoader().getResourceAsStream("res/textures/classic.png"), 256, 256, false, true);
-    private final PixelReader pr = spriteSheet.getPixelReader();
+    private static final Image spriteSheet = new Image(SpritesImage.class.getClassLoader().getResourceAsStream("res/textures/classic.png"), 256, 256, false, true);
+    private static final PixelReader pr = spriteSheet.getPixelReader();
     public WritableImage image;
 //    public PixelWriter pw = image.getPixelWriter();
+//    public PixelReader pixelReader;
 
     public static SpritesImage portal = new SpritesImage(4, 0);
     public static SpritesImage wall = new SpritesImage(5, 0);
@@ -90,6 +91,32 @@ public class SpritesImage {
     public static SpritesImage balloomRight1 = new SpritesImage(10, 1);
     public static SpritesImage balloomRight2 = new SpritesImage(10, 2);
 
+    public static SpritesImage onealLeft = new SpritesImage(11, 0);
+    public static SpritesImage onealLeft1 = new SpritesImage(11, 1);
+    public static SpritesImage onealLeft2 = new SpritesImage(11, 2);
+    public static SpritesImage onealDead = new SpritesImage(11, 3);
+    public static SpritesImage onealRight = new SpritesImage(12, 0);
+    public static SpritesImage onealRight1 = new SpritesImage(12, 1);
+    public static SpritesImage onealRight2 = new SpritesImage(12, 2);
+
+    public static SpritesImage dollLeft = new SpritesImage(13, 0);
+    public static SpritesImage dollLeft1 = new SpritesImage(13, 1);
+    public static SpritesImage dollLeft2 = new SpritesImage(13, 2);
+    public static SpritesImage dollDead = new SpritesImage(13, 3);
+    public static SpritesImage dollRight = new SpritesImage(14, 0);
+    public static SpritesImage dollRight1 = new SpritesImage(14, 1);
+    public static SpritesImage dollRight2 = new SpritesImage(14, 2);
+
+    public static SpritesImage mobDead = new SpritesImage(15, 0);
+
+    public static SpritesImage ghostLeft = new SpritesImage(6, 5);
+    public static SpritesImage ghostLeft1 = new SpritesImage(6, 6);
+    public static SpritesImage ghostLeft2 = new SpritesImage(6, 7);
+    public static SpritesImage ghostDead = new SpritesImage(6, 8);
+    public static SpritesImage ghostRight = new SpritesImage(7, 5);
+    public static SpritesImage ghostRight1 = new SpritesImage(7, 6);
+    public static SpritesImage ghostRight2 = new SpritesImage(7, 7);
+
     public SpritesImage(int x, int y) {
         image = new WritableImage(spriteSheet.getPixelReader(), x*16, y*16, 16, 16);
 //        getSpriteImage(x, y);
@@ -98,17 +125,18 @@ public class SpritesImage {
     private void getSpriteImage(int x, int y) {
 
         int _x = 0, _y = 0;
-        for (int i=y*50; i<y*50+50; i++) {
-            for (int j=x*50; j<x*50+50; j++) {
+        for (int i=y*16; i<y*16+16; i++) {
+            for (int j=x*16; j<x*16+16; j++) {
                 if (pr.getArgb(j, i) != -65281) {
 //                    pw.setArgb(_x, _y, pr.getArgb(j, i));
                 }
                 _x++;
-                if (_x == 50) _x = 0;
+                if (_x == 16) _x = 0;
 
             }
             _y++;
-            if (_y == 50) _y = 0;
+            if (_y == 16) _y = 0;
         }
+
     }
 }

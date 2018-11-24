@@ -10,11 +10,11 @@ public class FlameItem extends PowerUp {
 
     int updateTime = 0;
 
-    public FlameItem(int _x, int _y, Board _board) {
+    public FlameItem(int _x, int _y) {
         x = _x;
         y = _y;
-        board = _board;
         spriteImage = flameItem.image;
+        duration = 1200;
     }
 
     @Override
@@ -24,26 +24,24 @@ public class FlameItem extends PowerUp {
 
     @Override
     public void update() {
-        if (!isRemoved) {
-            if (!isAdded) {
-                if (board.player.collide(x, y)) {
-                    board.player.bombRange++;
-//                    for (int i = 0; i < board.bombs.size(); i++) {
-//                        board.bombs.get(i).explosion.bombRange++;
-//                    }
-//                    System.out.println(" tang xong");
-                    isAdded = true;
-                }
-            } else {
-                updateTime++;
-                if (updateTime >= 1800) {
-                    for (int i = 0; i < board.bombs.size(); i++) {
-                        if (board.bombs.get(i).isExploded == false) break;
-                        if (i == board.bombs.size() - 1) {
-                            isRemoved = true;
-                            board.player.bombRange--;
-                            System.out.println(updateTime);
-//                            System.out.println("giam xong");
+        if (showingTime <= 600 || isAdded) {
+            if (board.getBrick(x, y) == null) {
+                showingTime++;
+                if (!isAdded) {
+                    if (board.player.collide(x, y)) {
+                        board.player.bombRange++;
+                        isAdded = true;
+                    }
+                } else {
+                    updateTime++;
+                    if (updateTime >= duration) {
+                        for (int i = 0; i < board.bombs.size(); i++) {
+                            if (board.bombs.get(i).isExploded == false) break;
+                            if (i == board.bombs.size() - 1) {
+                                isRemoved = true;
+                                isAdded = false;
+                                board.player.bombRange--;
+                            }
                         }
                     }
                 }
@@ -53,6 +51,6 @@ public class FlameItem extends PowerUp {
 
     @Override
     public void render(Screen screen) {
-        if (!isAdded) screen.renderEntity(x, y, this);
+        if (showingTime <= 600 && !isAdded) screen.renderEntity(x, y, this);
     }
 }

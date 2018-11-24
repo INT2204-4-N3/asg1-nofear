@@ -9,9 +9,8 @@ public abstract class Entity implements IRender {
 
     public int x, y;
     public boolean isRemoved = false;
-    public SpritesImage sprite;
-    public WritableImage spriteImage = new WritableImage(50, 50);
-    protected Board board;
+    public WritableImage spriteImage;
+    public static Board board;
 
     public abstract boolean collide(Entity entity);
 

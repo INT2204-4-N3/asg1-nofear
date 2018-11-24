@@ -13,7 +13,6 @@ public class Brick extends Tile {
 
     public boolean isDestroyed = false;
     public int updateTime = 0;
-    public PowerUp powerUp;
 
     public Brick(int x, int y, WritableImage tileImage) {
         super(x, y, tileImage);
@@ -36,11 +35,9 @@ public class Brick extends Tile {
         if (updateTime == 1) spriteImage = brickExploded.image;
         else if (updateTime == 5) spriteImage = brickExploded1.image;
         else if (updateTime == 10) spriteImage = brickExploded2.image;
-        else if (updateTime == 13) isRemoved = true;
+        else if (updateTime >= 13) {
+            isRemoved = true;
+        }
     }
 
-    @Override
-    public void render(Screen screen) {
-        screen.renderEntity(x, y, this);
-    }
 }

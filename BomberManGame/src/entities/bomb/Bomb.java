@@ -1,33 +1,32 @@
 package entities.bomb;
 
+import audio.PlayAudio;
 import entities.AnimatedEntity;
 import entities.Entity;
 import entities.tile.Wall;
 import graphics.Screen;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import level.Board;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import java.io.File;
 
 import static sprites.SpritesImage.*;
 
 public class Bomb extends AnimatedEntity {
 
-    public boolean isPut = false, isExploded = true;
+    public boolean isPut = false, isExploded = true, isCollidingPlayer = false;
     public Explosion explosion = new Explosion();
-    int explosionX, explosionY;
     int updateTime = 0;
     Entity entity = this;
-    Wall wall;
-    int index;
-    boolean isAdded = false;
-    public Board board;
-
-    public Bomb(int _x, int _y, Board _board) {
-        x = _x;
-        y = _y;
-        board = _board;
-    }
 
     public Bomb() {
-
+        x = 0;
+        y = 0;
+        spriteImage = bomb.image;
     }
 
     @Override
@@ -38,41 +37,35 @@ public class Bomb extends AnimatedEntity {
     @Override
     public void update() {
         if (isPut){
-            isExploded = false;
+            if (board.player.collide(x, y)) isCollidingPlayer = true;
+            else isCollidingPlayer = false;
             updateTime ++;
-            getImage();
-            if (updateTime >= 120) {
-                explosion.bombRange = board.player.bombRange;
-                explosion.x = x - explosion.bombRange*16;
-                explosion.y = y - explosion.bombRange*16;
-                explosion.board = board;
-                explosion.update();
-                entity = explosion;
-                board.bombsArea.remove(wall);
+            if (updateTime == 1) {
+                isExploded = false;
+                Explosion.bombRange = board.player.bombRange;
+                explosion.x = x - Explosion.bombRange * 16;
+                explosion.y = y - Explosion.bombRange * 16;
             }
-            if (updateTime >= 138) {
+            else if (updateTime >= 120 && updateTime <= 138) {
+                if (updateTime == 120) {
+                    isCollidingPlayer = false;
+                    entity = explosion;
+                    PlayAudio.playExplosionSound();
+
+                }
+                explosion.update();
+            }
+            else if (updateTime > 138) {
                 explosion.collide();
                 updateTime = 0;
                 x = 0;
                 y = 0;
-                isAdded = false;
                 isPut = false;
                 isExploded = true;
                 entity = this;
                 spriteImage = bomb.image;
             }
-            if (!isAdded) {
-                for (int i = 0; i < board.enemies.size(); i++) {
-                    if (board.enemies.get(i).collide(x, y)) break;
-                    else /*if (board.player.x < x - 15 || board.player.x >= x + 16
-                            || board.player.y >= y + 16 || board.player.y < y - 15) */{
-                        wall = new Wall(x, y, null);
-                        index = board.bombsArea.size();
-                        board.bombsArea.add(wall);
-                        isAdded = true;
-                    }
-                }
-            }
+            getImage();
             animate();
         }
     }
@@ -95,7 +88,9 @@ public class Bomb extends AnimatedEntity {
     }
 
     public boolean collide(int _x, int _y) {
-        if (_x >= x - 15 && _x < x + 16 && _y >= y - 15 && _y < y + 16) return true;
+        if (_x >= x - 14 && _x < x + 15 && _y >= y - 14 && _y < y + 15) return true;
         return false;
     }
+
+
 }

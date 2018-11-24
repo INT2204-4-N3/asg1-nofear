@@ -1,9 +1,6 @@
 package entities.mob;
 
 import entities.Entity;
-import entities.tile.Brick;
-import entities.tile.Grass;
-import entities.tile.Wall;
 import graphics.Screen;
 import input.KeyboardEvent;
 import javafx.scene.image.PixelReader;
@@ -11,9 +8,6 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import level.Board;
-
-import java.security.Key;
 
 import static sprites.SpritesImage.*;
 
@@ -32,12 +26,13 @@ public class Player extends Mob {
     public WritableImage playerRightImage2 = fixPlayerRightImage2(playerRight2.image);
 
     public KeyboardEvent keyPressed, keyReleased;
-    public int speed = 2, speedDelay = 3, _x = 0, _y = 0, xMin, xMax, updateTime = 0, bombRange = 1;
-    public boolean canPassWall = false;
+    public int speed = 2, speedDelay = 3, _x = 0, _y = 0, xMin = 9, xMax = 16, updateTime = 0, bombRange = 1;
+    public static boolean canPassWall = false;
+    public boolean isEnteredPortal = false;
 
-    public Player(int x, int y, Board board) {
-        super(x, y, board);
-        spriteImage = playerDownImage;
+    public Player(int x, int y) {
+        super(x, y);
+        spriteImage = playerRightImage;
         handleKeyPressedEvent();
         handleKeyReleasedEvent();
     }
@@ -45,15 +40,17 @@ public class Player extends Mob {
     @Override
     public void update() {
         if (isAlive) {
-            if (canMove(x, y + _y) || canPassWall) {
-                if (x >= 16 && x <= 464 && y + _y >= 16 && y + _y <= 176) y += _y;
+            if (board.portal.collide(x, y) && board.getBrick(board.portal.x, board.portal.y) == null) isEnteredPortal = true;
+            else isEnteredPortal = false;
 
+            if (canMove(x, y + _y)) {
+                y += _y;
             }
             else if (x%16 > 0 && x%16 < 7) x -= speed;
             else if (x%16 > 9) x += speed;
 
-            if (canMove(x + _x, y) || canPassWall) {
-                if (x + _x >= 16 && x + _x <= 464 && y >= 16 && y  <= 176) x += _x;
+            if (canMove(x + _x, y)) {
+                x += _x;
             }
             else if (y%16 > 0 && y%16 < 7) y -= speed;
             else if (y%16 > 9) y += speed;
@@ -111,6 +108,7 @@ public class Player extends Mob {
         keyReleased = new KeyboardEvent() {
             @Override
             public void handle(KeyEvent event) {
+            if (isAlive) {
                 if (event.getCode() == KeyCode.UP || event.getCode() == KeyCode.W) {
                     if (direction == 0) {
                         direction = -1;
@@ -137,6 +135,7 @@ public class Player extends Mob {
                     }
                 }
             }
+            }
         };
     }
 
@@ -149,12 +148,15 @@ public class Player extends Mob {
         for (int i = 0; i < board.walls.size(); i++) {
             if (board.walls.get(i).collide(x, y)) return false;
         }
-        for (int i = 0; i < board.bricks.size(); i++) {
-            if (board.bricks.get(i).collide(x, y)) return false;
+        if (!canPassWall) {
+            for (int i = 0; i < board.bricks.size(); i++) {
+                if (board.bricks.get(i).collide(x, y)) return false;
+            }
         }
-//        for (int i = 0; i < board.bombsArea.size(); i++) {
-//            if (board.bombsArea.get(i).collide(x, y)) return false;
-//        }
+        for (int i = 0; i < board.bombs.size(); i++) {
+            if (board.bombs.get(i).isPut && !board.bombs.get(i).isCollidingPlayer && board.bombs.get(i).collide(x, y)) return false;
+        }
+
         return true;
     }
 

@@ -1,6 +1,8 @@
 package entities.bomb;
 
 import entities.Entity;
+import entities.mob.enemies.Enemy;
+import entities.powerup.PowerUp;
 import entities.tile.Brick;
 import entities.tile.Wall;
 import graphics.Screen;
@@ -12,9 +14,9 @@ import static sprites.SpritesImage.*;
 
 public class Explosion extends Entity {
 
-    public int bombRange = 1;
+    public static int bombRange = 1;
     int updateTime = 0;
-    public Board board;
+    public static boolean flamePass = false;
 
     public Explosion() {
 
@@ -41,75 +43,119 @@ public class Explosion extends Entity {
 
     public void collide() {
         int _x = x + bombRange*16;
-        for (int i = y + bombRange*16; i >= y; i--) {
-            if (board.isBarrier(_x, i)) {
-                if (board.getBarrier(_x, i) instanceof Wall) break;
-                else if (board.getBarrier(_x, i) instanceof Brick) {
-                    ((Brick) board.getBarrier(_x, i)).isDestroyed = true;
-                    break;
-                }
-            }
-            else {
-                if (board.player.collide(_x, i)) board.player.isAlive = false;
-                for (int j = 0; j < board.enemies.size(); j++) {
-                    if (board.enemies.get(j).collide(_x, i)) board.enemies.get(j).isAlive = false;
-                }
-            }
-        }
-        for (int i = y + bombRange*16; i <= y + bombRange*32; i++) {
-            if (board.isBarrier(_x, i)) {
-                if (board.getBarrier(_x, i) instanceof Wall) break;
-                else if (board.getBarrier(_x, i) instanceof Brick) {
-                    ((Brick) board.getBarrier(_x, i)).isDestroyed = true;
-                    break;
-                }
-
-            }
-            else {
-                if (board.player.collide(_x, i)) board.player.isAlive = false;
-                for (int j = 0; j < board.enemies.size(); j++) {
-                    if (board.enemies.get(j).collide(_x, i)) board.enemies.get(j).isAlive = false;
-                }
-            }
-        }
+        collideExplosionAbove(y + bombRange*16, y, _x);
+        collideExplosionBelow(y + bombRange*16, y + bombRange*32, _x);
 
         int _y = y + bombRange*16;
-        for (int i = x + bombRange*16; i >= x ; i--) {
-            if (board.isBarrier(i, _y)) {
-                if (board.getBarrier(i, _y) instanceof Wall) break;
-                else if (board.getBarrier(i, _y) instanceof Brick) {
-                    ((Brick) board.getBarrier(i, _y)).isDestroyed = true;
-                    break;
-                }
+        collideExplosionLeft(x + bombRange*16, x, _y);
+        collideExplosionRight(x + bombRange*16, x + bombRange*32, _y);
+    }
 
-            }
-            else {
-                if (board.player.collide(i, _y)) board.player.isAlive = false;
-                for (int j = 0; j < board.enemies.size(); j++) {
-                    if (board.enemies.get(j).collide(i, _y)) board.enemies.get(j).isAlive = false;
+    private void collideExplosionAbove(int start, int end, int x) {
+        for (int i = start; i >= end; i--) {
+            if (board.isWall(x, i) || board.isBrick(x, i)) {
+                if (board.getBarrier(x, i) instanceof Wall) break;
+                else {
+                    ((Brick) board.getBarrier(x, i)).isDestroyed = true;
+                    if (!flamePass) break;
                 }
-            }
-        }
-        for (int i = x + bombRange*16 + 16; i <= x + bombRange*32; i++) {
-            if (board.isBarrier(i, _y)) {
-                if (board.getBarrier(i, _y) instanceof Wall) break;
-                else if (board.getBarrier(i, _y) instanceof Brick) {
-                    ((Brick) board.getBarrier(i, _y)).isDestroyed = true;
-                    break;
-                }
-
-            }
-            else {
-                if (board.player.collide(i, _y)) board.player.isAlive = false;
+            } else {
+                if (board.player.collide(x, i)) board.player.isAlive = false;
                 for (int j = 0; j < board.enemies.size(); j++) {
-                    if (board.enemies.get(j).collide(i, _y)) board.enemies.get(j).isAlive = false;
+                    if (board.enemies.get(j).collide(x, i)) board.enemies.get(j).isAlive = false;
+                }
+                PowerUp powerUp;
+                for (int j = 0; j < board.powerUps.size(); j++) {
+                    powerUp = board.powerUps.get(j);
+                    if (board.getBrick(powerUp.x, powerUp.y) == null) {
+                        if (powerUp.collide(x, i)) {
+                            powerUp.showingTime = 601;
+                        }
+                    }
                 }
             }
         }
     }
 
-    public void getImage() {
+    private void collideExplosionBelow(int start, int end, int x) {
+        for (int i = start; i <= end; i++) {
+            if (board.isWall(x, i) || board.isBrick(x, i)) {
+                if (board.getBarrier(x, i) instanceof Wall) break;
+                else {
+                    ((Brick) board.getBarrier(x, i)).isDestroyed = true;
+                    if (!flamePass) break;
+                }
+            }
+            else {
+                if (board.player.collide(x, i)) board.player.isAlive = false;
+                for (int j = 0; j < board.enemies.size(); j++) {
+                    if (board.enemies.get(j).collide(x, i)) board.enemies.get(j).isAlive = false;
+                }
+                PowerUp powerUp;
+                for (int j = 0; j < board.powerUps.size(); j++) {
+                    powerUp = board.powerUps.get(j);
+                    if (board.getBrick(powerUp.x, powerUp.y) == null) {
+                        if (powerUp.collide(x, i)) {
+                            powerUp.showingTime = 601;
+                        }
+                    }
+                }
+            }
+        }
+    }
 
+    private void collideExplosionLeft(int start, int end, int y) {
+        for (int i = start; i >= end ; i--) {
+            if (board.isWall(i, y) || board.isBrick(i, y)) {
+                if (board.getBarrier(i, y) instanceof Wall) break;
+                else {
+                    ((Brick) board.getBarrier(i, y)).isDestroyed = true;
+                    if (!flamePass) break;
+                }
+            }
+            else {
+                if (board.player.collide(i, y)) board.player.isAlive = false;
+                for (int j = 0; j < board.enemies.size(); j++) {
+                    if (board.enemies.get(j).collide(i, y)) board.enemies.get(j).isAlive = false;
+                }
+                PowerUp powerUp;
+                for (int j = 0; j < board.powerUps.size(); j++) {
+                    powerUp = board.powerUps.get(j);
+                    if (board.getBrick(powerUp.x, powerUp.y) == null) {
+                        if (powerUp.collide(i, y)) {
+                            powerUp.showingTime = 601;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void collideExplosionRight(int start, int end, int y) {
+        for (int i = start; i <= end; i++) {
+            if (/*board.isBarrier(i, y)*/ board.isWall(i, y) || board.isBrick(i, y)) {
+                if (board.getBarrier(i, y) instanceof Wall) break;
+                else {
+                    ((Brick) board.getBarrier(i, y)).isDestroyed = true;
+                    if (!flamePass) break;
+                }
+            }
+            else {
+                if (board.player.collide(i, y)) board.player.isAlive = false;
+                for (int j = 0; j < board.enemies.size(); j++) {
+                    if (board.enemies.get(j).collide(i, y)) board.enemies.get(j).isAlive = false;
+                }
+                PowerUp powerUp;
+                for (int j = 0; j < board.powerUps.size(); j++) {
+                    powerUp = board.powerUps.get(j);
+                    if (board.getBrick(powerUp.x, powerUp.y) == null) {
+                        if (powerUp.collide(i, y)) {
+                            powerUp.showingTime = 601;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public void createBombExplodedImage(int position) {

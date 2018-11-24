@@ -5,10 +5,10 @@ import level.Board;
 
 public abstract class Enemy extends Mob {
 
-    protected int speed;
+    protected int speed, deadTime = 0, speedDelay;
 
-    public Enemy(int x, int y, Board board) {
-        super(x, y, board);
+    public Enemy(int x, int y) {
+        super(x, y);
     }
 
     public boolean collide(int _x, int _y) {
@@ -23,9 +23,9 @@ public abstract class Enemy extends Mob {
         for (int i = 0; i < board.bricks.size(); i++) {
             if (board.bricks.get(i).collide(x, y)) return false;
         }
-        for (int i = 0; i < board.bombsArea.size(); i++) {
-            if (board.bombsArea.get(i).collide(x, y)) return false;
-        }
+//        for (int i = 0; i < board.bombsArea.size(); i++) {
+//            if (board.bombsArea.get(i).collide(x, y)) return false;
+//        }
         return true;
     }
 }

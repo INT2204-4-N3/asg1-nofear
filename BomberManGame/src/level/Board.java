@@ -2,14 +2,12 @@ package level;
 
 import entities.Entity;
 import entities.bomb.Bomb;
+import entities.bomb.Explosion;
 import entities.mob.Mob;
 import entities.mob.Player;
 import entities.mob.enemies.Enemy;
 import entities.powerup.PowerUp;
-import entities.tile.Brick;
-import entities.tile.Grass;
-import entities.tile.Tile;
-import entities.tile.Wall;
+import entities.tile.*;
 import graphics.IRender;
 import graphics.Screen;
 import input.KeyboardEvent;
@@ -38,39 +36,71 @@ public class Board implements IRender {
     public List<Grass> grasses = new ArrayList<>();
     public List<Brick> bricks = new LinkedList<>();
     public List<Wall> walls = new ArrayList<>();
-    public List<Wall> bombsArea = new LinkedList<>();
     public List<PowerUp> powerUps = new LinkedList<>();
+    public Portal portal;
     public Player player;
     public KeyboardEvent keyPressed, keyReleased;
-    public boolean isRendering = false;
+    public boolean bombPass = false;
+    public boolean isPause = false;
+    int pressedTime = 0;
 
     public Board() {
         keyPressed = new KeyboardEvent() {
             @Override
             public void handle(KeyEvent event) {
-                if (player.isAlive) {
-                    player.keyPressed.handle(event);
+                if (player.isAlive && !isPause) {
+
                     if (event.getCode() == KeyCode.SPACE) {
+                        int xBomb, yBomb;
                         for (int i = 0; i < bombs.size(); i++) {
                             if (bombs.get(i).isExploded) {
-                                bombs.get(i).x = player.x;
-                                bombs.get(i).y = player.y;
+                                xBomb = player.x;
+                                yBomb = player.y;
                                 if (player.x % 16 > 0 && player.x % 16 < 8) {
-                                    bombs.get(i).x -= player.x % 16;
-                                } else if (player.x % 16 > 8) bombs.get(i).x += 16 - player.x % 16;
+                                    xBomb -= player.x % 16;
+                                } else if (player.x % 16 > 8) xBomb += 16 - player.x % 16;
 
                                 if (player.y % 16 > 0 && player.y % 16 < 8) {
-                                    bombs.get(i).y -= player.y % 16;
-                                } else if (player.y % 16 > 8) bombs.get(i).y += 16 - player.y % 16;
+                                    yBomb -= player.y % 16;
+                                } else if (player.y % 16 > 8) yBomb += 16 - player.y % 16;
 
-                                if (bombs.get(i).x % 16 == 0 && bombs.get(i).y % 16 == 0) {
-                                    bombs.get(i).isPut = true;
-                                    updateEnemies();
-                                    updateBombs();
-                                    break;
+                                if (xBomb % 16 == 0 && yBomb % 16 == 0) {
+                                    if ((!isWall(xBomb, yBomb) && !isBrick(xBomb, yBomb)) || bombPass) {
+                                        bombs.get(i).x = xBomb;
+                                        bombs.get(i).y = yBomb;
+                                        bombs.get(i).isPut = true;
+                                        break;
+                                    }
                                 }
                             }
                         }
+                    }
+                    player.keyPressed.handle(event);
+                    // Go S-U de de tang speed
+                    if (event.getCode() == KeyCode.S) {
+                        pressedTime = 1;
+                    }
+                    if (pressedTime == 1) {
+                        if (event.getCode() == KeyCode.U) {
+                            pressedTime = 2;
+                        }
+                    }
+                    if (pressedTime == 2) {
+                        player.speedDelay = 2;
+                        pressedTime = 0;
+                    }
+                    // Go F-U de tang flame
+                    if (event.getCode() == KeyCode.F) {
+                        pressedTime = 3;
+                    }
+                    if (pressedTime == 3) {
+                        if (event.getCode() == KeyCode.U) {
+                            pressedTime = 4;
+                        }
+                    }
+                    if (pressedTime == 4) {
+                        player.bombRange ++;
+                        pressedTime = 0;
                     }
                 }
                 if (event.getCode() == KeyCode.H) {
@@ -78,24 +108,30 @@ public class Board implements IRender {
                     player.updateTime = 0;
                     player.spriteImage = playerDown.image;
                 }
+                if (event.getCode() == KeyCode.P) {
+                    if (isPause) isPause = false;
+                    else isPause = true;
+                }
             }
         };
 
         keyReleased = new KeyboardEvent() {
             @Override
             public void handle(KeyEvent event) {
-                player.keyReleased.handle(event);
+                if (!isPause) player.keyReleased.handle(event);
             }
         };
     }
 
     @Override
     public void update() {
-        updateEnemies();
-        updateBombs();
-        updateBricks();
-        updatePowerUps();
-        updatePlayers();
+        if (!isPause) {
+            updateEnemies();
+            updateBombs();
+            updateBricks();
+            updatePowerUps();
+            updatePlayers();
+        }
     }
 
     @Override
@@ -108,18 +144,42 @@ public class Board implements IRender {
     }
 
     public void render() {
-        renderGrasses();
-        renderPowerUps();
-        renderBricks();
-        renderWalls();
-        renderEnemies();
-        renderBombs();
-        renderPlayers();
+        if (!isPause) {
+            renderGrasses();
+            renderPortal();
+            renderPowerUps();
+            renderBricks();
+            renderWalls();
+            renderEnemies();
+            renderBombs();
+            renderPlayers();
+        }
     }
 
-    public void updateBombsArea() {
-        for (int i = 0; i < bombsArea.size(); i++) {
-            bombsArea.get(i).update();
+    private void renderPortal() {
+        portal.render(screen);
+    }
+
+    public void removeEntities() {
+        Iterator iterator = bricks.iterator();
+        while (iterator.hasNext()) {
+            iterator.next();
+            iterator.remove();
+        }
+        iterator = walls.iterator();
+        while (iterator.hasNext()) {
+            iterator.next();
+            iterator.remove();
+        }
+        iterator = grasses.iterator();
+        while (iterator.hasNext()) {
+            iterator.next();
+            iterator.remove();
+        }
+        iterator = powerUps.iterator();
+        while (iterator.hasNext()) {
+            iterator.next();
+            iterator.remove();
         }
     }
 
@@ -147,12 +207,15 @@ public class Board implements IRender {
     }
 
     public void updateBricks() {
-        for (int i = 0; i < bricks.size(); i++) {
-            if (bricks.get(i).isDestroyed) {
-                grasses.add(new Grass(bricks.get(i).x, bricks.get(i).y, grass.image));
-                bricks.get(i).update();
+        Iterator iterator = bricks.iterator();
+        Brick brick;
+        while (iterator.hasNext()) {
+            brick = (Brick) iterator.next();
+            if (brick.isDestroyed) {
+                grasses.add(new Grass(brick.x, brick.y, grass.image));
+                brick.update();
             }
-            if (bricks.get(i).isRemoved) bricks.remove(i);
+            if (brick.isRemoved) iterator.remove();
         }
     }
 
@@ -196,7 +259,7 @@ public class Board implements IRender {
     }
 
     public void updatePlayers() {
-        player.update();
+        if (!player.isEnteredPortal || enemies.size() != 0) player.update();
     }
 
     public void renderPlayers() {
@@ -204,8 +267,12 @@ public class Board implements IRender {
     }
 
     private void updateEnemies() {
-        for (int i = 0; i < enemies.size(); i++) {
-            enemies.get(i).update();
+        Iterator iterator = enemies.iterator();
+        Enemy enemy;
+        while (iterator.hasNext()) {
+            enemy = (Enemy) iterator.next();
+            if (!enemy.isRemoved) enemy.update();
+            else iterator.remove();
         }
     }
 
@@ -252,9 +319,34 @@ public class Board implements IRender {
             if (walls.get(i).x == x && walls.get(i).y == y) return true;
 
         }
+        if (!Explosion.flamePass) {
+            for (int i = 0; i < bricks.size(); i++) {
+                if (bricks.get(i).x == x && bricks.get(i).y == y) return true;
+
+            }
+        }
+        return false;
+    }
+
+    public boolean isWall(int x, int y) {
+        for (int i = 0; i < walls.size(); i++) {
+            if (walls.get(i).x == x && walls.get(i).y == y) return true;
+
+        }
+        return false;
+    }
+
+    public boolean isBrick(int x, int y) {
         for (int i = 0; i < bricks.size(); i++) {
             if (bricks.get(i).x == x && bricks.get(i).y == y) return true;
 
+        }
+        return false;
+    }
+
+    public boolean isPowerUp(int x, int y) {
+        for (int i = 0; i < powerUps.size(); i++) {
+            if (powerUps.get(i).x == x && powerUps.get(i).y == y) return true;
         }
         return false;
     }
@@ -264,6 +356,14 @@ public class Board implements IRender {
             if (walls.get(i).x == x && walls.get(i).y == y) return walls.get(i);
 
         }
+        for (int i = 0; i < bricks.size(); i++) {
+            if (bricks.get(i).x == x && bricks.get(i).y == y) return bricks.get(i);
+
+        }
+        return null;
+    }
+
+    public Brick getBrick(int x, int y) {
         for (int i = 0; i < bricks.size(); i++) {
             if (bricks.get(i).x == x && bricks.get(i).y == y) return bricks.get(i);
 

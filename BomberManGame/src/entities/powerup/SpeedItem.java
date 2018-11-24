@@ -11,11 +11,11 @@ public class SpeedItem extends PowerUp {
 
     int updateTime = 0;
 
-    public SpeedItem(int _x, int _y, Board _board) {
+    public SpeedItem(int _x, int _y) {
         x = _x;
         y = _y;
-        board = _board;
         spriteImage = speedItem.image;
+        duration = 1800;
     }
     @Override
     public boolean collide(Entity entity) {
@@ -24,17 +24,22 @@ public class SpeedItem extends PowerUp {
 
     @Override
     public void update() {
-        if (!isRemoved) {
-            if (!isAdded) {
-                if (board.player.collide(x, y)) {
-                    board.player.speedDelay = 2;
-                    isAdded = true;
-                }
-            } else {
-                updateTime++;
-                if (updateTime == 1800) {
-                    board.player.speedDelay = 3;
-                    isRemoved = true;
+        if (showingTime <= 600 || isAdded) {
+            if (board.getBrick(x, y) == null) {
+                showingTime++;
+//            System.out.println(showingTime);
+                if (!isAdded) {
+                    if (board.player.collide(x, y)) {
+                        board.player.speedDelay = 2;
+                        isAdded = true;
+                    }
+                } else {
+                    updateTime++;
+                    if (updateTime == duration) {
+                        board.player.speedDelay = 3;
+                        isRemoved = true;
+                        isAdded = false;
+                    }
                 }
             }
         }
@@ -42,6 +47,6 @@ public class SpeedItem extends PowerUp {
 
     @Override
     public void render(Screen screen) {
-        if (!isAdded) screen.renderEntity(x, y, this);
+        if (showingTime <= 600 && !isAdded) screen.renderEntity(x, y, this);
     }
 }

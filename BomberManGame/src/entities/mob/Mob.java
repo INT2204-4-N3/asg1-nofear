@@ -9,12 +9,10 @@ public abstract class Mob extends AnimatedEntity {
     public boolean isAlive = true;
     public boolean isMoving = false;
     public int direction = -1;
-    public Board board;
 
-    public Mob(int x, int y, Board board) {
+    public Mob(int x, int y) {
         super.x = x;
         super.y = y;
-        this.board = board;
     }
 
 }
