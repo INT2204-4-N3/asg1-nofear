@@ -17,10 +17,6 @@ public class SpeedItem extends PowerUp {
         spriteImage = speedItem.image;
         duration = 1800;
     }
-    @Override
-    public boolean collide(Entity entity) {
-        return false;
-    }
 
     @Override
     public void update() {

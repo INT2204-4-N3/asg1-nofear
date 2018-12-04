@@ -3,7 +3,6 @@ package entities.powerup;
 import entities.Entity;
 import entities.bomb.Bomb;
 import graphics.Screen;
-import level.Board;
 
 import static sprites.SpritesImage.bombItem;
 
@@ -16,11 +15,6 @@ public class BombItem extends PowerUp {
         y = _y;
         spriteImage = bombItem.image;
         duration = 1200;
-    }
-
-    @Override
-    public boolean collide(Entity entity) {
-        return false;
     }
 
     @Override

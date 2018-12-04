@@ -9,25 +9,27 @@ public class Screen {
 
     int width, height;
     public WritableImage screenImage;
+    PixelWriter pw;
 
     public Screen(int width, int height) {
         this.width = width;
         this.height = height;
         screenImage = new WritableImage(width, height);
+        pw = screenImage.getPixelWriter();
     }
 
     public void renderEntity(int x, int y, Entity entity) {
-        if (entity.spriteImage != null) {
+//        if (entity.spriteImage != null) {
             PixelReader pr = entity.spriteImage.getPixelReader();
-            PixelWriter pw = screenImage.getPixelWriter();
-            for (int i = y; i < y + entity.spriteImage.getHeight(); i++) {
-                for (int j = x; j < x + entity.spriteImage.getWidth(); j++) {
+            int size = (int) entity.spriteImage.getWidth();
+            for (int i = y; i < y + size; i++) {
+                for (int j = x; j < x + size; j++) {
                     if (pr.getArgb(j - x, i - y) != -65281 && pr.getArgb(j - x, i - y) != 0) {
                         pw.setArgb(j, i, pr.getArgb(j - x, i - y));
                     }
                 }
             }
-        }
+//        }
     }
 
     public void renderGrass(int _x, int _y, Screen screen) {
@@ -65,5 +67,23 @@ public class Screen {
 //                pw.setArgb(j, i, 0);
             }
         }
+    }
+
+    public static void main(String[] args) {
+        WritableImage image = new WritableImage(1, 1);
+        int w = (int) image.getWidth();
+        int h = (int) image.getHeight();
+        System.out.println(w);
+        image = null;
+        w = (int) image.getWidth();
+        System.out.println(w);
+//        PixelWriter pw1 = image.getPixelWriter();
+//        WritableImage image1 = new WritableImage(1, 1);
+//        PixelWriter pw = image1.getPixelWriter();
+//        pw.setArgb(0, 0, -100);
+//        PixelReader pr = image.getPixelReader();
+//        System.out.println(pr.getArgb(0, 0));
+//        System.out.println(pr.getArgb(0, 0));
+//        pw1.setArgb(0, 0, -100);
     }
 }

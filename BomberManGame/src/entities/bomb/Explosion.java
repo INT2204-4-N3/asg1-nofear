@@ -1,14 +1,12 @@
 package entities.bomb;
 
 import entities.Entity;
-import entities.mob.enemies.Enemy;
 import entities.powerup.PowerUp;
 import entities.tile.Brick;
 import entities.tile.Wall;
 import graphics.Screen;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
-import level.Board;
 
 import static sprites.SpritesImage.*;
 
@@ -23,7 +21,7 @@ public class Explosion extends Entity {
     }
 
     @Override
-    public boolean collide(Entity entity) {
+    public boolean collide(int _x, int _y) {
         return false;
     }
 
@@ -32,7 +30,10 @@ public class Explosion extends Entity {
         updateTime++;
         if (updateTime == 1) createBombExplodedImage(0);
         else if (updateTime == 6) createBombExplodedImage(1);
-        else if (updateTime == 11) createBombExplodedImage(2);
+        else if (updateTime == 11) {
+            createBombExplodedImage(2);
+            collide();
+        }
         else if (updateTime == 19) updateTime = 0;
     }
 
@@ -133,7 +134,7 @@ public class Explosion extends Entity {
 
     private void collideExplosionRight(int start, int end, int y) {
         for (int i = start; i <= end; i++) {
-            if (/*board.isBarrier(i, y)*/ board.isWall(i, y) || board.isBrick(i, y)) {
+            if (board.isWall(i, y) || board.isBrick(i, y)) {
                 if (board.getBarrier(i, y) instanceof Wall) break;
                 else {
                     ((Brick) board.getBarrier(i, y)).isDestroyed = true;

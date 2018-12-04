@@ -2,7 +2,7 @@ package entities.mob;
 
 import entities.Entity;
 import graphics.Screen;
-import input.KeyboardEvent;
+import javafx.event.EventHandler;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
@@ -25,8 +25,8 @@ public class Player extends Mob {
     public WritableImage playerRightImage1 = fixPlayerRightImage1(playerRight1.image);
     public WritableImage playerRightImage2 = fixPlayerRightImage2(playerRight2.image);
 
-    public KeyboardEvent keyPressed, keyReleased;
-    public int speed = 2, speedDelay = 3, _x = 0, _y = 0, xMin = 9, xMax = 16, updateTime = 0, bombRange = 1;
+    public EventHandler keyPressed, keyReleased;
+    public int speed = 2, speedDelay = 3, _x = 0, _y = 0, xMin = 9, xMax = 16, updateTime = 0, bombRange = 1, lives = 3;
     public static boolean canPassWall = false;
     public boolean isEnteredPortal = false;
 
@@ -71,15 +71,28 @@ public class Player extends Mob {
     }
 
     private void deadAnimation() {
-        if (updateTime == 1) spriteImage = playerDead.image;
+        if (updateTime == 1) {
+            lives--;
+            spriteImage = playerDead.image;
+        }
         else if (updateTime == 10) spriteImage = playerDead1.image;
-        else if (updateTime >= 20) spriteImage = playerDead2.image;
+        else if (updateTime >= 20) {
+            spriteImage = playerDead2.image;
+            if (updateTime >= 70 && lives > 0) {
+                x = 16;
+                y = 16;
+                spriteImage = playerRightImage;
+                isAlive = true;
+                updateTime = 0;
+            }
+        }
     }
 
     public void handleKeyPressedEvent() {
-        keyPressed = new KeyboardEvent() {
+        keyPressed = new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
+
                 if (event.getCode() == KeyCode.UP || event.getCode() == KeyCode.W) {
                     direction = 0;
                     xMin = 13;
@@ -105,7 +118,7 @@ public class Player extends Mob {
     }
 
     public void handleKeyReleasedEvent() {
-        keyReleased = new KeyboardEvent() {
+        keyReleased = new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
             if (isAlive) {
@@ -135,10 +148,12 @@ public class Player extends Mob {
                     }
                 }
             }
+            else direction = -1;
             }
         };
     }
 
+    @Override
     public boolean collide(int _x, int _y) {
         if (_x >= x - xMin && _x < x + xMax && _y >= y - 15 && _y < y + 16) return true;
         return false;
@@ -219,6 +234,9 @@ public class Player extends Mob {
                         }
                     }
                     break;
+                case -1:
+                    _x = 0;
+                    _y = 0;
             }
         }
 
@@ -300,8 +318,4 @@ public class Player extends Mob {
         return newImage;
     }
 
-    @Override
-    public boolean collide(Entity entity) {
-        return false;
-    }
 }

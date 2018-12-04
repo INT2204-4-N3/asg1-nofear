@@ -109,6 +109,14 @@ public class SpritesImage {
 
     public static SpritesImage mobDead = new SpritesImage(15, 0);
 
+    public static SpritesImage mouseFaceLeft = new SpritesImage(4, 5);
+    public static SpritesImage mouseFaceLeft1 = new SpritesImage(4, 6);
+    public static SpritesImage mouseFaceLeft2 = new SpritesImage(4, 7);
+    public static SpritesImage mouseFaceDead = new SpritesImage(4, 8);
+    public static SpritesImage mouseFaceRight = new SpritesImage(5, 5);
+    public static SpritesImage mouseFaceRight1 = new SpritesImage(5, 6);
+    public static SpritesImage mouseFaceRight2 = new SpritesImage(5, 7);
+
     public static SpritesImage ghostLeft = new SpritesImage(6, 5);
     public static SpritesImage ghostLeft1 = new SpritesImage(6, 6);
     public static SpritesImage ghostLeft2 = new SpritesImage(6, 7);
@@ -116,6 +124,38 @@ public class SpritesImage {
     public static SpritesImage ghostRight = new SpritesImage(7, 5);
     public static SpritesImage ghostRight1 = new SpritesImage(7, 6);
     public static SpritesImage ghostRight2 = new SpritesImage(7, 7);
+
+    public static SpritesImage roundLeft = new SpritesImage(8, 5);
+    public static SpritesImage roundLeft1 = new SpritesImage(8, 6);
+    public static SpritesImage roundLeft2 = new SpritesImage(8, 7);
+    public static SpritesImage roundDead = new SpritesImage(8, 8);
+    public static SpritesImage roundRight = new SpritesImage(9, 5);
+    public static SpritesImage roundRight1 = new SpritesImage(9, 6);
+    public static SpritesImage roundRight2 = new SpritesImage(9, 7);
+
+    public static SpritesImage blueLiquidLeft = new SpritesImage(10, 5);
+    public static SpritesImage blueLiquidLeft1 = new SpritesImage(10, 6);
+    public static SpritesImage blueLiquidLeft2 = new SpritesImage(10, 7);
+    public static SpritesImage blueLiquidDead = new SpritesImage(10, 8);
+    public static SpritesImage blueLiquidRight = new SpritesImage(11, 5);
+    public static SpritesImage blueLiquidRight1 = new SpritesImage(11, 6);
+    public static SpritesImage blueLiquidRight2 = new SpritesImage(11, 7);
+
+    public static SpritesImage redCoinLeft = new SpritesImage(12, 5);
+    public static SpritesImage redCoinLeft1 = new SpritesImage(12, 6);
+    public static SpritesImage redCoinLeft2 = new SpritesImage(12, 7);
+    public static SpritesImage redCoinDead = new SpritesImage(12, 8);
+    public static SpritesImage redCoinRight = new SpritesImage(13, 5);
+    public static SpritesImage redCoinRight1 = new SpritesImage(13, 6);
+    public static SpritesImage redCoinRight2 = new SpritesImage(13, 7);
+
+    public static SpritesImage yellowCoinLeft = new SpritesImage(14, 5);
+    public static SpritesImage yellowCoinLeft1 = new SpritesImage(14, 6);
+    public static SpritesImage yellowCoinLeft2 = new SpritesImage(14, 7);
+    public static SpritesImage yellowCoinDead = new SpritesImage(14, 8);
+    public static SpritesImage yellowCoinRight = new SpritesImage(15, 5);
+    public static SpritesImage yellowCoinRight1 = new SpritesImage(15, 6);
+    public static SpritesImage yellowCoinRight2 = new SpritesImage(15, 7);
 
     public SpritesImage(int x, int y) {
         image = new WritableImage(spriteSheet.getPixelReader(), x*16, y*16, 16, 16);

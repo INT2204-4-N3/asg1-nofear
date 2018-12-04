@@ -2,17 +2,8 @@ package entities.bomb;
 
 import audio.PlayAudio;
 import entities.AnimatedEntity;
-import entities.Entity;
-import entities.tile.Wall;
-import graphics.Screen;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import level.Board;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import java.io.File;
+import graphics.Screen;
 
 import static sprites.SpritesImage.*;
 
@@ -21,17 +12,11 @@ public class Bomb extends AnimatedEntity {
     public boolean isPut = false, isExploded = true, isCollidingPlayer = false;
     public Explosion explosion = new Explosion();
     int updateTime = 0;
-    Entity entity = this;
 
     public Bomb() {
         x = 0;
         y = 0;
         spriteImage = bomb.image;
-    }
-
-    @Override
-    public boolean collide(Entity entity) {
-        return false;
     }
 
     @Override
@@ -49,7 +34,6 @@ public class Bomb extends AnimatedEntity {
             else if (updateTime >= 120 && updateTime <= 138) {
                 if (updateTime == 120) {
                     isCollidingPlayer = false;
-                    entity = explosion;
                     PlayAudio.playExplosionSound();
 
                 }
@@ -62,17 +46,22 @@ public class Bomb extends AnimatedEntity {
                 y = 0;
                 isPut = false;
                 isExploded = true;
-                entity = this;
                 spriteImage = bomb.image;
             }
-            getImage();
-            animate();
+            if (updateTime < 120) {
+                getImage();
+                animate();
+            }
         }
     }
 
     @Override
     public void render(Screen screen) {
-        screen.renderEntity(entity.x, entity.y, entity);
+        if (updateTime <= 120) screen.renderEntity(x, y, this);
+        else {
+            screen.renderEntity(explosion.x, explosion.y, explosion);
+        }
+
     }
 
     private void getImage() {

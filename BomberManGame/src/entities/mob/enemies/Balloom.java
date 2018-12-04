@@ -12,7 +12,7 @@ import static sprites.SpritesImage.*;
 public class Balloom extends Enemy {
 
     boolean isCollidingBomb = false;
-    int collidingBomb = 0;
+
     public Balloom(int x, int y) {
         super(x, y);
         speed = 1;
@@ -21,17 +21,12 @@ public class Balloom extends Enemy {
         spriteImage = balloomRight.image;
     }
 
-    @Override
-    public boolean collide(Entity entity) {
-        return false;
-    }
 
     @Override
     public void update() {
         if (deadTime <= 60) {
             if (isAlive) {
                 getImage();
-//                collidingBomb = 0;
                 if (board.player.collide(x, y)) board.player.isAlive = false;
                 for (int i = 0; i < board.bombs.size(); i++) {
                     if (board.bombs.get(i).collide(x, y)) {
@@ -40,8 +35,6 @@ public class Balloom extends Enemy {
                     }
                     else if (i == board.bombs.size() - 1) isCollidingBomb = false;
                 }
-//                if (collidingBomb == 1) isCollidingBomb = true;
-//                else isCollidingBomb = false;
                 moveRandom();
             } else {
                 deadTime++;
@@ -60,13 +53,9 @@ public class Balloom extends Enemy {
 
     private void deadAnimation() {
         if (deadTime%3 == 0) spriteImage = balloomDead.image;
-        else spriteImage = null;
+        else spriteImage = new WritableImage(16, 16);
     }
 
-    public boolean collide(int _x, int _y) {
-        if (_x >= x - 15 && _x < x + 16 && _y >= y - 15 && _y < y + 16) return true;
-        return false;
-    }
 
     public boolean canMove(int x, int y) {
         for (int i = 0; i < board.walls.size(); i++) {
@@ -85,20 +74,20 @@ public class Balloom extends Enemy {
 
     private void moveRandom() {
         if (animate%speedDelay == 0) {
-            boolean moving = false;
-            while (!moving) {
+
+            while (true) {
                 if (direction == 0 && canMove(x, y - speed)) {
                     y -= speed;
-                    moving = true;
+                    break;
                 } else if (direction == 1 && canMove(x + speed, y)) {
                     x += speed;
-                    moving = true;
+                    break;
                 } else if (direction == 2 && canMove(x, y + speed)) {
                     y += speed;
-                    moving = true;
+                    break;
                 } else if (direction == 3 && canMove(x - speed, y)) {
                     x -= speed;
-                    moving = true;
+                    break;
                 } else direction = new Random().nextInt(4);
             }
         }

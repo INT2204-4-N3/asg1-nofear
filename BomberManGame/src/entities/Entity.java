@@ -12,6 +12,6 @@ public abstract class Entity implements IRender {
     public WritableImage spriteImage;
     public static Board board;
 
-    public abstract boolean collide(Entity entity);
+    public abstract boolean collide(int _x, int _y);
 
 }

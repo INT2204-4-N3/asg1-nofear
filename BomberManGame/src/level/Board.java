@@ -10,7 +10,6 @@ import entities.powerup.PowerUp;
 import entities.tile.*;
 import graphics.IRender;
 import graphics.Screen;
-import input.KeyboardEvent;
 import javafx.animation.AnimationTimer;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
@@ -39,13 +38,13 @@ public class Board implements IRender {
     public List<PowerUp> powerUps = new LinkedList<>();
     public Portal portal;
     public Player player;
-    public KeyboardEvent keyPressed, keyReleased;
+    public EventHandler keyPressed, keyReleased;
     public boolean bombPass = false;
     public boolean isPause = false;
     int pressedTime = 0;
 
     public Board() {
-        keyPressed = new KeyboardEvent() {
+        keyPressed = new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
                 if (player.isAlive && !isPause) {
@@ -106,6 +105,7 @@ public class Board implements IRender {
                 if (event.getCode() == KeyCode.H) {
                     player.isAlive = true;
                     player.updateTime = 0;
+                    player.lives = 1;
                     player.spriteImage = playerDown.image;
                 }
                 if (event.getCode() == KeyCode.P) {
@@ -115,7 +115,7 @@ public class Board implements IRender {
             }
         };
 
-        keyReleased = new KeyboardEvent() {
+        keyReleased = new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
                 if (!isPause) player.keyReleased.handle(event);
@@ -123,14 +123,20 @@ public class Board implements IRender {
         };
     }
 
+    boolean isUpdate = false, isRender = false;
+
     @Override
     public void update() {
         if (!isPause) {
-            updateEnemies();
-            updateBombs();
-            updateBricks();
-            updatePowerUps();
-            updatePlayers();
+//            if (!isRender) {
+//                isUpdate = true;
+                updateEnemies();
+                updateBombs();
+                updateBricks();
+                updatePowerUps();
+                updatePlayers();
+//                isUpdate = false;
+//            }
         }
     }
 
@@ -145,14 +151,18 @@ public class Board implements IRender {
 
     public void render() {
         if (!isPause) {
-            renderGrasses();
-            renderPortal();
-            renderPowerUps();
-            renderBricks();
-            renderWalls();
-            renderEnemies();
-            renderBombs();
-            renderPlayers();
+//            if (!isUpdate) {
+//                isRender = true;
+                renderGrasses();
+                renderPortal();
+                renderPowerUps();
+                renderBricks();
+                renderWalls();
+                renderEnemies();
+                renderBombs();
+                renderPlayers();
+//                isRender = false;
+//            }
         }
     }
 
@@ -180,6 +190,14 @@ public class Board implements IRender {
         while (iterator.hasNext()) {
             iterator.next();
             iterator.remove();
+        }
+        iterator = enemies.iterator();
+        while (iterator.hasNext()) {
+            iterator.next();
+            iterator.remove();
+        }
+        for (int i = 0; i < bombs.size(); i++) {
+            bombs.get(i).isPut = false;
         }
     }
 

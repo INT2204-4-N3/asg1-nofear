@@ -29,33 +29,48 @@ import static input.ReadFile.*;
 
 public class TestGame extends Application {
 
-    int mapLevel = 1;
-    WritableImage gameScreen;
-    final Board board = new Board();
+    private int mapLevel = 2;
+    private WritableImage gameScreen;
+    private Board board = new Board();
     private final long[] frameTimes = new long[100];
     private int frameTimeIndex = 0 ;
     private boolean arrayFilled = false ;
-    Label label = new Label("FPS: ?");
-    private boolean isExit = false;
+    private Label fpsLabel = new Label("FPS: ?");
+    private Label livesLabel = new Label();
+    private Label levelLabel = new Label();
+    private Label gameInfoLabel = new Label();
+    public static boolean isExit = false;
+    private Image gameOver = new Image(TestGame.class.getClassLoader().getResourceAsStream("res/gameover.png"), 250, 100, false, true);
+    private Image pause = new Image(TestGame.class.getClassLoader().getResourceAsStream("res/pausegame.jpg"), 80, 30, false, true);
+    private Image nextLevel = new Image(TestGame.class.getClassLoader().getResourceAsStream("res/next_level.jpg"), 160, 50, false, true);
+    private Image winGame = new Image(TestGame.class.getClassLoader().getResourceAsStream("res/wingame.jpg"), 224, 60, false, true);
+
+    private int timer = 0, timer1 = 0;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         Entity.board = board;
         AnchorPane anchorPane = new AnchorPane();
         loadMap(".\\src\\res\\levels\\Level" + mapLevel + ".txt", board);
+        levelLabel.setText("Level : " + mapLevel);
         gameScreen = new WritableImage( 48*mapCol, 48*mapRow);
         board.screen = new Screen(16*mapCol, 16*mapRow);
 
         board.bombs.add(new Bomb());
 
-        label.setLayoutX(570);
-        label.setLayoutY(10);
+        fpsLabel.setLayoutX(570);
+        fpsLabel.setLayoutY(10);
+        livesLabel.setLayoutX(500);
+        livesLabel.setLayoutY(10);
+        levelLabel.setLayoutX(280);
+        levelLabel.setLayoutY(10);
+        gameInfoLabel.setLayoutX(350);
+        gameInfoLabel.setLayoutY(10);
         PlayAudio.playSound();
 
         Canvas canvas = new Canvas(624, 624);
         canvas.setLayoutY(30);
         anchorPane.getChildren().add(canvas);
-
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         new AnimationTimer()
@@ -73,7 +88,7 @@ public class TestGame extends Application {
                     long elapsedNanos = now - oldFrameTime ;
                     long elapsedNanosPerFrame = elapsedNanos / frameTimes.length ;
                     double frameRate = 1_000_000_000.0 / elapsedNanosPerFrame ;
-                    label.setText(String.format("FPS: %.0f", frameRate));
+                    fpsLabel.setText(String.format("FPS: %.0f", frameRate));
                 }
 
                 board.update();
@@ -83,10 +98,20 @@ public class TestGame extends Application {
                 else {
                     gc.drawImage( gameScreen, -(board.player.x*3 - 312), 0 );
                 }
-                if (board.isPause){
-                    gc.drawImage(new Image(TestGame.class.getClassLoader().getResourceAsStream("res/pausegame.jpg"), 80, 30, false, true), 300, 250);
+                if (board.isPause) gc.drawImage(pause, 300, 250);
+                if (board.player.lives == 0) {
+                    timer++;
+                    if (timer >= 60) gc.drawImage(gameOver, 200, 0);
+
+                }
+                if (board.player.isEnteredPortal && board.enemies.size() == 0) {
+                    if (mapLevel < 7 && timer1 < 45) gc.drawImage(nextLevel, 240, 150);
+                    if (mapLevel == 7) gc.drawImage(winGame, 200, 150);
                 }
 
+                gameInfoLabel.setText("Remaining enemy : " + board.enemies.size());
+                livesLabel.setText("Lives : " + board.player.lives);
+                levelLabel.setText("Level : " + mapLevel);
             }
         }.start();
 
@@ -94,18 +119,23 @@ public class TestGame extends Application {
             @Override
             public void run() {
                 while (!isExit) {
-                    synchronized (board) {
+//                    synchronized (board) {
                         if (!board.player.isEnteredPortal || board.enemies.size() != 0) {
+//                            board.update();
                             board.render();
                         } else {
-                            board.removeEntities();
-                            mapLevel++;
-                            loadMap(".\\src\\res\\levels\\Level" + mapLevel + ".txt", board);
-                            board.screen = new Screen(16 * mapCol, 16 * mapRow);
-                            board.player.isEnteredPortal = false;
+                            timer1++;
+                            if (timer1 == 45 && mapLevel < 7) {
+                                board.removeEntities();
+                                mapLevel++;
+                                loadMap(".\\src\\res\\levels\\Level" + mapLevel + ".txt", board);
+                                board.screen = new Screen(16 * mapCol, 16 * mapRow);
+                                board.player.isEnteredPortal = false;
+                                timer1 = 0;
+                            }
                         }
                         getImageWith(board.screen.screenImage, 3);
-                    }
+//                    }
                 }
             }
         }).start();
@@ -116,25 +146,53 @@ public class TestGame extends Application {
                 isExit = true;
             }
         });
-        anchorPane.getChildren().add(label);
+        anchorPane.getChildren().addAll(fpsLabel, livesLabel, levelLabel, gameInfoLabel);
         MenuBar menuBar = new MenuBar();
 
 
-        // Tạo các Menu
-        Menu fileMenu = new Menu("Option");
+        Menu optionsMenu = new Menu("Options");
         Menu editMenu = new Menu("Edit");
         Menu helpMenu = new Menu("Help");
 
-
-        // Tạo các MenuItem
-        MenuItem newItem = new MenuItem("Power-Ups");
-        MenuItem openFileItem = new MenuItem("Open File");
+        MenuItem newGameItem = new MenuItem("New game");
+        MenuItem powerUpsItem = new MenuItem("Power-Ups");
+        MenuItem helpItem = new MenuItem("Help");
         MenuItem exitItem = new MenuItem("Exit");
 
         MenuItem copyItem = new MenuItem("Copy");
         MenuItem pasteItem = new MenuItem("Paste");
 
-        newItem.setOnAction(new EventHandler<ActionEvent>() {
+        newGameItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                mapLevel = 1;
+                board.removeEntities();
+                loadMap(".\\src\\res\\levels\\Level" + mapLevel + ".txt", board);
+                board.screen = new Screen(16 * mapCol, 16 * mapRow);
+            }
+        });
+
+        helpItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                AnchorPane anchorPane1 = new AnchorPane();
+                TextArea textArea = new TextArea();
+                textArea.setWrapText(true);
+                textArea.setPrefSize(400, 400);
+                textArea.setText("               Game là dễ không có gì để 'Help' cả =))\n");
+                textArea.appendText("W/Up, D/Right, S/Down, A/Left để di chuyển nhân vật đi lên, qua phải, đi xuống, qua trái. Space để đặt Bomb\n");
+                textArea.appendText("Ngoài ra bạn còn có thể tăng sức mạnh một cách bá đạo cho nhân vật ở mục Power-Ups :D\n");
+                textArea.appendText("Tiêu diệt hết Enemy và tìm ra Portal để qua màn chơi mới. Chúc may mắn!");
+                textArea.setEditable(false);
+                anchorPane1.getChildren().addAll(textArea);
+                Stage stage = new Stage();
+                stage.setTitle("Help");
+                stage.setScene(new Scene(anchorPane1, 400, 400));
+                stage.show();
+            }
+        });
+
+        powerUpsItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 AnchorPane root = new AnchorPane();
@@ -269,17 +327,23 @@ public class TestGame extends Application {
             }
         });
 
-        // Thêm các MenuItem vào Menu.
-        fileMenu.getItems().addAll(newItem, openFileItem, exitItem);
+        exitItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                isExit = true;
+                primaryStage.close();
+            }
+        });
+        optionsMenu.getItems().addAll(newGameItem, powerUpsItem, helpItem, exitItem);
         editMenu.getItems().addAll(copyItem, pasteItem);
 
-        // Thêm các Menu vào MenuBar
-        menuBar.getMenus().addAll(fileMenu, editMenu, helpMenu);
+        menuBar.getMenus().addAll(optionsMenu, editMenu, helpMenu);
         anchorPane.getChildren().add(menuBar);
         Scene scene = new Scene(anchorPane);
         scene.setOnKeyPressed(board.keyPressed);
         scene.setOnKeyReleased(board.keyReleased);
         primaryStage.setScene(scene);
+        primaryStage.setTitle("Bomberman Game");
         primaryStage.show();
     }
 

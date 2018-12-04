@@ -19,11 +19,6 @@ public class Brick extends Tile {
     }
 
     @Override
-    public boolean collide(Entity entity) {
-        return false;
-    }
-
-    @Override
     public boolean collide(int _x, int _y) {
         if (_x >= x - 15 && _x < x + 16 && _y >= y - 15 && _y < y + 16) return true;
         return false;

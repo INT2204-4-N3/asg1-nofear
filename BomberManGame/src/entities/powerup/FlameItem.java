@@ -18,11 +18,6 @@ public class FlameItem extends PowerUp {
     }
 
     @Override
-    public boolean collide(Entity entity) {
-        return false;
-    }
-
-    @Override
     public void update() {
         if (showingTime <= 600 || isAdded) {
             if (board.getBrick(x, y) == null) {
