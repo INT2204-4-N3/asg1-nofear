@@ -1,6 +1,5 @@
 package entities.mob;
 
-import entities.Entity;
 import graphics.Screen;
 import javafx.event.EventHandler;
 import javafx.scene.image.PixelReader;
@@ -234,9 +233,9 @@ public class Player extends Mob {
                         }
                     }
                     break;
-                case -1:
-                    _x = 0;
-                    _y = 0;
+//                case -1:
+//                    _x = 0;
+//                    _y = 0;
             }
         }
 

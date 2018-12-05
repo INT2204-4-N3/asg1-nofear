@@ -3,20 +3,15 @@ package level;
 import entities.Entity;
 import entities.bomb.Bomb;
 import entities.bomb.Explosion;
-import entities.mob.Mob;
 import entities.mob.Player;
 import entities.mob.enemies.Enemy;
 import entities.powerup.PowerUp;
 import entities.tile.*;
 import graphics.IRender;
 import graphics.Screen;
-import javafx.animation.AnimationTimer;
-import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -123,20 +118,14 @@ public class Board implements IRender {
         };
     }
 
-    boolean isUpdate = false, isRender = false;
-
     @Override
     public void update() {
         if (!isPause) {
-//            if (!isRender) {
-//                isUpdate = true;
-                updateEnemies();
-                updateBombs();
-                updateBricks();
-                updatePowerUps();
-                updatePlayers();
-//                isUpdate = false;
-//            }
+            updateEnemies();
+            updateBombs();
+            updateBricks();
+            updatePowerUps();
+            updatePlayers();
         }
     }
 
@@ -151,18 +140,14 @@ public class Board implements IRender {
 
     public void render() {
         if (!isPause) {
-//            if (!isUpdate) {
-//                isRender = true;
-                renderGrasses();
-                renderPortal();
-                renderPowerUps();
-                renderBricks();
-                renderWalls();
-                renderEnemies();
-                renderBombs();
-                renderPlayers();
-//                isRender = false;
-//            }
+            renderGrasses();
+            renderPortal();
+            renderPowerUps();
+            renderBricks();
+            renderWalls();
+            renderEnemies();
+            renderBombs();
+            renderPlayers();
         }
     }
 
